@@ -14,7 +14,7 @@ func New(g *cli.Globals) *resty.Client {
         TokenURL: g.TokenUrl,
         EndpointParams: url.Values{
             "grant_type": {"refresh_token"},
-            "refresh_token": {g.ApiKey},
+            "refresh_token": {g.ApiToken},
         },
     }
     credClient := clientCredCfg.Client(context.Background())

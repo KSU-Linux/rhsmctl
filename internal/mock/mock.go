@@ -7,7 +7,7 @@ import (
 // Create a mock *cli.Globals so we don't test API calls
 // against production URLs.
 var Globals = &cli.Globals{
-        ApiKey: "mock_api_key",
+        ApiToken: "mock_api_token",
         ApiUrl: "http://localhost:9999",
         ClientId: "rhsm-api",
         Format: "json",
