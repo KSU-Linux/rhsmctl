@@ -10,10 +10,7 @@ version: 2
 
 before:
   hooks:
-    # You may remove this if you don't use go modules.
     - go mod tidy
-    # you may remove this if you don't need go generate
-    #- go generate ./...
 
 builds:
   - env:
@@ -51,14 +48,41 @@ archives:
 
 changelog:
   sort: asc
+  use: github
+  format: "{{ .SHA }}: {{ .Message }} ({{ with .AuthorUsername }}@{{ . }}{{ else }}{{ .AuthorName }}{{ end }})"
   filters:
     exclude:
+      - "^ci:"
+      - "^chore"
       - "^docs:"
+      - "^github:"
       - "^test:"
+      - "merge conflict"
+      - Merge pull request
+      - Merge remote-tracking branch
+      - Merge branch
+      - go mod tidy
+  groups:
+    - title: "New Features"
+      regexp: "^.*feat[(\\w)]*:+.*$"
+      order: 100
+    - title: "Bug Fixes"
+      regexp: "^.*fix[(\\w)]*:+.*$"
+      order: 200
+    - title: "Dependency Updates"
+      regexp: "^.*\\(deps\\)*:+.*$"
+      order: 300
+    - title: "Documentation Updates"
+      regexp: "^.*docs[(\\w)]*:+.*$"
+      order: 400
+    - title: "Other"
+      order: 9999
 
 release:
-  footer: >-
-
+  header: |
+    ## rhsmctl {{ .Tag }}
+  footer: |
+    
     ---
-
-    Released by [GoReleaser](https://github.com/goreleaser/goreleaser).
+    
+    Made with :heart: at Kennesaw State University.
