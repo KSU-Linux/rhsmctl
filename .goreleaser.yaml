@@ -18,9 +18,21 @@ before:
 builds:
   - env:
       - CGO_ENABLED=0
+    ldflags: -s -w -X main.Version=v{{ .Version }} -X main.CommitSHA={{ .Commit }}
     goos:
       - linux
       - darwin
+      - freebsd
+      - openbsd
+      - netbsd
+    goarch:
+      - amd64
+      - arm64
+      - "386"
+      - arm
+    goarm:
+      - "6"
+      - "7"
 
 archives:
   - formats: [tar.gz]
