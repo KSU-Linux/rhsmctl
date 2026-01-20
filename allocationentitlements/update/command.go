@@ -1,0 +1,36 @@
+package update
+
+import (
+    "fmt"
+    "strconv"
+    "strings"
+    "rhsmctl/internal/api"
+    "rhsmctl/internal/cli"
+    "rhsmctl/internal/resty"
+    "rhsmctl/internal/tty"
+    "github.com/alecthomas/kong"
+)
+
+func (o *Options) Run(ctx *kong.Context, g *cli.Globals) error {
+    var errRes api.ManagementErrorRoot
+    client := resty.New(g)
+    res, err := client.R().
+        SetDebug(g.Debug).
+        SetError(&errRes).
+        SetPathParams(map[string]string{
+            "uuid": o.UUID,
+            "EntitlementID": o.EntitlementID,
+        }).
+        SetQueryParams(map[string]string{
+            "quantity": strconv.Itoa(o.Quantity),
+        }).
+        Put(g.ApiUrl+"/management/v1/allocations/{uuid}/entitlements/{EntitlementID}")
+    if (err != nil) {
+        return err
+    }
+    if (res.IsError()) {
+        return fmt.Errorf("error: %s", strings.ToLower(errRes.Error.Message))
+    }
+    tty.Println(o.EntitlementID+" updated to "+strconv.Itoa(o.Quantity))
+    return nil
+}
