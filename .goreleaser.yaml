@@ -49,7 +49,6 @@ archives:
 changelog:
   sort: asc
   use: github
-  format: "{{ .SHA }}: {{ .Message }} ({{ with .AuthorUsername }}@{{ . }}{{ else }}{{ .AuthorName }}{{ end }})"
   filters:
     exclude:
       - "^ci:"
