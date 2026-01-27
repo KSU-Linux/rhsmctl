@@ -1,13 +1,11 @@
 package api
 
 type AccountErrorRoot struct {
-	Body []AccountErrorBody `json:"body"`
-}
-
-type AccountErrorBody struct {
-	Id string `json:"id"`
-	Name string `json:"name"`
-	Type string `json:"type"`
+	Type     string `json:"type"`
+	Title    string `json:"title"`
+	Status   int    `json:"status"`
+	Detail   string `json:"detail"`
+	Instance string `json:"instance"`
 }
 
 type ManagementErrorRoot struct {

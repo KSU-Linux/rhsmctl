@@ -17,6 +17,7 @@ import (
     "rhsmctl/subscription"
     "rhsmctl/system"
     "rhsmctl/systementitlements"
+    "rhsmctl/users"
     "rhsmctl/internal/cli"
     "rhsmctl/internal/util"
     "github.com/alecthomas/kong"
@@ -50,6 +51,7 @@ type Options struct {
     Subscription subscription.Options `cmd:"" help:"Manage subscriptions."`
     System system.Options `cmd:"" help:"Manage systems."`
     SystemEntitlements systementitlements.Options `cmd:"" help:"Manage entitlements of a system."`
+    Users users.Options `cmd:"" help:"Manage users."`
     Version kong.VersionFlag `short:"v" help:"Print version information and quit."`
 }
 
