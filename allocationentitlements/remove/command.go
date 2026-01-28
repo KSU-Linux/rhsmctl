@@ -26,7 +26,7 @@ func (o *Options) Run(ctx *kong.Context, g *cli.Globals) error {
     if !confirm{
         return nil
     }
-    var errRes api.ManagementErrorRoot
+    var errRes api.ManagementError
     client := resty.New(g)
     res, err := client.R().
         SetDebug(g.Debug).

@@ -11,7 +11,7 @@ import (
 )
 
 func (o *Options) Run(ctx *kong.Context, g *cli.Globals) error {
-    var errRes api.ManagementErrorRoot
+    var errRes api.ManagementError
     client := resty.New(g)
     res, err := client.R().
         SetDebug(g.Debug).

@@ -36,7 +36,7 @@ func (o *Options) Run(ctx *kong.Context, g *cli.Globals) error {
     //    Rows(rows...)
     //fmt.Println(table)
 
-    var errRes api.ManagementErrorRoot
+    var errRes api.ManagementError
 
     client := resty.New(g)
     res, err := client.R().

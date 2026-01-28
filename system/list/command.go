@@ -21,7 +21,7 @@ func (o *Options) Run(ctx *kong.Context, g *cli.Globals) error {
     if o.Username != "" {
         params["username"] = o.Username
     }
-    var errRes api.ManagementErrorRoot
+    var errRes api.ManagementError
     client := resty.New(g)
     res, err := client.R().
         SetDebug(g.Debug).
