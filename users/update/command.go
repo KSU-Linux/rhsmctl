@@ -1,7 +1,8 @@
-package status
+package update
 
 import (
     "fmt"
+    //"reflect"
     "strconv"
     "strings"
     "rhsmctl/internal/api"
@@ -10,6 +11,7 @@ import (
     "rhsmctl/internal/tty"
     "github.com/alecthomas/kong"
 )
+
 
 func (o *Options) Run(ctx *kong.Context, g *cli.Globals) error {
     var (
@@ -21,8 +23,8 @@ func (o *Options) Run(ctx *kong.Context, g *cli.Globals) error {
     client := client.New(g)
 
     // Use account id if provided, otherwise attempt to fetch it.
-    if (o.AccountID != 0) {
-        acctId = strconv.Itoa(o.AccountID)
+    if (o.AccountID == nil) {
+        acctId = strconv.Itoa(*o.AccountID)
     } else {
         id, err := client.AccountID(); if err != nil {
             return err
@@ -31,8 +33,8 @@ func (o *Options) Run(ctx *kong.Context, g *cli.Globals) error {
     }
 
     // Use user id if provided, otherwise attempt to fetch it.
-    if (o.UserID != 0) {
-        userId = strconv.Itoa(o.UserID)
+    if (o.UserID == nil) {
+        userId = strconv.Itoa(*o.UserID)
     } else {
         id, err := client.UserID(); if err != nil {
             return err
@@ -40,14 +42,29 @@ func (o *Options) Run(ctx *kong.Context, g *cli.Globals) error {
         userId = id
     }
 
+    body := make(map[string]interface{})
+
+    // Only add options to the body of the request if they were
+    // explicitly set by a command-line option.
+    if o.EMail != nil {
+        body["email"] = *o.EMail
+    }
+    if o.Permissions != nil {
+        body["permissions"] = *o.Permissions
+    }
+    if o.Roles != nil {
+        body["roles"] = *o.Roles
+    }
+
     res, err := client.R().
+        SetBody(body).
         SetDebug(g.Debug).
         SetError(&errRes).
         SetPathParams(map[string]string{
             "accountId": acctId,
             "id": userId,
         }).
-        Get(g.ApiUrl+"/account/v1/accounts/{accountId}/users/{id}/status")
+        Post(g.ApiUrl+"/account/v1/accounts/{accountId}/users/{id}")
     if (err != nil) {
         return err
     }

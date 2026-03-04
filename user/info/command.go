@@ -1,8 +1,7 @@
-package status
+package info
 
 import (
     "fmt"
-    "strconv"
     "strings"
     "rhsmctl/internal/api"
     "rhsmctl/internal/cli"
@@ -13,31 +12,27 @@ import (
 
 func (o *Options) Run(ctx *kong.Context, g *cli.Globals) error {
     var (
-        acctId string
+        acctId string = ""
+        err    error
         errRes api.AccountError
-        userId string
+        path   string = "/account/v1/user"
+        userId string = ""
     )
 
     client := client.New(g)
 
-    // Use account id if provided, otherwise attempt to fetch it.
-    if (o.AccountID != 0) {
-        acctId = strconv.Itoa(o.AccountID)
-    } else {
-        id, err := client.AccountID(); if err != nil {
+    // Get the current user's account and user ID if extended
+    // details are requested.
+    if o.Details {
+        acctId, err = client.AccountID(); if err != nil {
             return err
         }
-        acctId = id
-    }
-
-    // Use user id if provided, otherwise attempt to fetch it.
-    if (o.UserID != 0) {
-        userId = strconv.Itoa(o.UserID)
-    } else {
-        id, err := client.UserID(); if err != nil {
+        userId, err = client.UserID(); if err != nil {
             return err
         }
-        userId = id
+        // Update the path string since details are retrieved
+        // from another endpoint.
+        path = "/account/v1/accounts/{accountId}/users/{id}"
     }
 
     res, err := client.R().
@@ -47,7 +42,7 @@ func (o *Options) Run(ctx *kong.Context, g *cli.Globals) error {
             "accountId": acctId,
             "id": userId,
         }).
-        Get(g.ApiUrl+"/account/v1/accounts/{accountId}/users/{id}/status")
+        Get(g.ApiUrl+path)
     if (err != nil) {
         return err
     }

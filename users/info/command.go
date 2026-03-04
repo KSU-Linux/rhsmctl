@@ -15,6 +15,7 @@ func (o *Options) Run(ctx *kong.Context, g *cli.Globals) error {
     var (
         acctId string
         errRes api.AccountError
+        userId string
     )
 
     client := client.New(g)
@@ -29,12 +30,22 @@ func (o *Options) Run(ctx *kong.Context, g *cli.Globals) error {
         acctId = id
     }
 
+    // Use user id if provided, otherwise attempt to fetch it.
+    if (o.UserID != 0) {
+        userId = strconv.Itoa(o.UserID)
+    } else {
+        id, err := client.UserID(); if err != nil {
+            return err
+        }
+        userId = id
+    }
+
     res, err := client.R().
         SetDebug(g.Debug).
         SetError(&errRes).
         SetPathParams(map[string]string{
             "accountId": acctId,
-            "id": strconv.Itoa(o.UserID),
+            "id": userId,
         }).
         Get(g.ApiUrl+"/account/v1/accounts/{accountId}/users/{id}")
     if (err != nil) {

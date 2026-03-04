@@ -52,8 +52,8 @@ type Options struct {
     Subscription subscription.Options `cmd:"" help:"Manage subscriptions."`
     System system.Options `cmd:"" help:"Manage systems."`
     SystemEntitlements systementitlements.Options `cmd:"" help:"Manage entitlements of a system."`
-    User user.Options `cmd:"" help:"Show the details of the user."`
-    Users users.Options `cmd:"" help:"Manage users."`
+    User user.Options `cmd:"" help:"Manage the current user."`
+    Users users.Options `cmd:"" help:"Manage users under the account."`
     Version kong.VersionFlag `short:"v" help:"Print version information and quit."`
 }
 
