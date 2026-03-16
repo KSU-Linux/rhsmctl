@@ -1,0 +1,62 @@
+package invite
+
+import (
+    "fmt"
+    "strconv"
+    "strings"
+    "rhsmctl/internal/api"
+    "rhsmctl/internal/cli"
+    "rhsmctl/internal/client"
+    "rhsmctl/internal/tty"
+    "github.com/alecthomas/kong"
+)
+
+
+func (o *Options) Run(ctx *kong.Context, g *cli.Globals) error {
+    var (
+        acctId string
+        errRes api.AccountError
+    )
+
+    client := client.New(g)
+
+    // Use account id if provided, otherwise attempt to fetch it.
+    if (o.AccountID != nil) {
+        acctId = strconv.Itoa(*o.AccountID)
+    } else {
+        id, err := client.AccountID(); if err != nil {
+            return err
+        }
+        acctId = id
+    }
+
+    body := make(map[string]interface{})
+
+    // Only add options to the body of the request if they were
+    // explicitly set by a command-line option.
+    body["emails"] = *o.EMails
+    body["localeCode"] = "en_US"
+    if o.Permissions != nil {
+        body["permissions"] = *o.Permissions
+    }
+    if o.Roles != nil {
+        body["roles"] = *o.Roles
+    }
+
+    res, err := client.R().
+        SetBody(body).
+        SetDebug(g.Debug).
+        SetError(&errRes).
+        SetPathParams(map[string]string{
+            "accountId": acctId,
+        }).
+        Post(g.ApiUrl+"/account/v1/accounts/{accountId}/users/invite")
+    if (err != nil) {
+        return err
+    }
+    if (res.IsError()) {
+        return fmt.Errorf("error: %s", strings.ToLower(errRes.Detail))
+    }
+    tty.Printjson(res.Bytes())
+    return nil
+}
