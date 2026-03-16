@@ -23,7 +23,7 @@ func (o *Options) Run(ctx *kong.Context, g *cli.Globals) error {
     client := client.New(g)
 
     // Use account id if provided, otherwise attempt to fetch it.
-    if (o.AccountID == nil) {
+    if (o.AccountID != nil) {
         acctId = strconv.Itoa(*o.AccountID)
     } else {
         id, err := client.AccountID(); if err != nil {
@@ -33,7 +33,7 @@ func (o *Options) Run(ctx *kong.Context, g *cli.Globals) error {
     }
 
     // Use user id if provided, otherwise attempt to fetch it.
-    if (o.UserID == nil) {
+    if (o.UserID != nil) {
         userId = strconv.Itoa(*o.UserID)
     } else {
         id, err := client.UserID(); if err != nil {
