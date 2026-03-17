@@ -2,7 +2,6 @@ package update
 
 import (
     "fmt"
-    //"reflect"
     "strconv"
     "strings"
     "rhsmctl/internal/api"
@@ -17,7 +16,7 @@ func (o *Options) Run(ctx *kong.Context, g *cli.Globals) error {
     var (
         acctId string
         errRes api.AccountError
-        userId string
+        userId string = strconv.Itoa(o.UserID)
     )
 
     client := client.New(g)
@@ -30,16 +29,6 @@ func (o *Options) Run(ctx *kong.Context, g *cli.Globals) error {
             return err
         }
         acctId = id
-    }
-
-    // Use user id if provided, otherwise attempt to fetch it.
-    if (o.UserID != nil) {
-        userId = strconv.Itoa(*o.UserID)
-    } else {
-        id, err := client.UserID(); if err != nil {
-            return err
-        }
-        userId = id
     }
 
     body := make(map[string]interface{})

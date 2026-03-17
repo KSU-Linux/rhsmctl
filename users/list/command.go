@@ -20,8 +20,8 @@ func (o *Options) Run(ctx *kong.Context, g *cli.Globals) error {
     client := client.New(g)
 
     // Use account id if provided, otherwise attempt to fetch it.
-    if (o.AccountID != 0) {
-        acctId = strconv.Itoa(o.AccountID)
+    if (o.AccountID != nil) {
+        acctId = strconv.Itoa(*o.AccountID)
     } else {
         id, err := client.AccountID(); if err != nil {
             return err
