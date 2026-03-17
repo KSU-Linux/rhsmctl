@@ -1,0 +1,59 @@
+package roleassign
+
+import (
+    "fmt"
+    "strconv"
+    "strings"
+    "rhsmctl/internal/api"
+    "rhsmctl/internal/cli"
+    "rhsmctl/internal/client"
+    "rhsmctl/internal/tty"
+    "github.com/alecthomas/kong"
+)
+
+
+func (o *Options) Run(ctx *kong.Context, g *cli.Globals) error {
+    var (
+        acctId string
+        errRes api.AccountError
+        userId string = strconv.Itoa(o.UserID)
+    )
+
+    client := client.New(g)
+
+    // Use account id if provided, otherwise attempt to fetch it.
+    if (o.AccountID != nil) {
+        acctId = strconv.Itoa(*o.AccountID)
+    } else {
+        id, err := client.AccountID(); if err != nil {
+            return err
+        }
+        acctId = id
+    }
+
+    body := make(map[string]interface{})
+
+    if o.Roles != nil {
+        body["roles"] = *o.Roles
+    } else {
+        body["roles"] = []string{}
+    }
+
+    res, err := client.R().
+        SetBody(body).
+        SetDebug(g.Debug).
+        SetError(&errRes).
+        SetPathParams(map[string]string{
+            "accountId": acctId,
+            "id": userId,
+        }).
+        Post(g.ApiUrl+"/account/v1/accounts/{accountId}/users/{id}/roles")
+    if (err != nil) {
+        return err
+    }
+    if (res.IsError()) {
+        return fmt.Errorf("error: %s", strings.ToLower(errRes.Detail))
+    }
+    tty.Printjson(res.Bytes())
+    return nil
+}
