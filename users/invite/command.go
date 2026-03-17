@@ -30,12 +30,13 @@ func (o *Options) Run(ctx *kong.Context, g *cli.Globals) error {
         acctId = id
     }
 
+    // Initialize the body of the request.
     body := make(map[string]interface{})
-
-    // Only add options to the body of the request if they were
-    // explicitly set by a command-line option.
     body["emails"] = *o.EMails
-    body["localeCode"] = "en_US"
+    body["localeCode"] = *o.Locale
+
+    // Only add permissions and roles options to the body of the 
+    // request if they were explicitly set by a command-line option.
     if o.Permissions != nil {
         body["permissions"] = *o.Permissions
     }
