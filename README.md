@@ -28,6 +28,8 @@ The current supported sub-commands are:
 * __subscription__: Manage subscriptions.
 * __system__: Manage systems.
 * __system-entitlements__: Manage entitlements of a system.
+* __user__: Manage the current user.
+* __users__: Manage users under the account.
 
 To get a sub-command's detailed description, options and usage, use the `-h` or `--help` option.
 
