@@ -14,3 +14,10 @@ type ManagementError struct {
         Message string `json:"message"`
     } `json:"error"`
 }
+
+type SupportError struct {
+    InternalErrorCode string   `json:"internalErrorCode,omitempty"`
+    Message           string   `json:"message,omitempty"`
+    DetailMessage     string   `json:"detailMessage,omitempty"`
+    Recommendations   []string `json:"recommendations,omitempty"`
+}

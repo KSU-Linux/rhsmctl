@@ -8,6 +8,7 @@ import (
     "rhsmctl/account"
     "rhsmctl/allocation"
     "rhsmctl/allocationentitlements"
+    "rhsmctl/businesshours"
     "rhsmctl/cloudaccess"
     "rhsmctl/cloudaccessaccounts"
     "rhsmctl/errata"
@@ -43,6 +44,7 @@ type Options struct {
     Account account.Options `cmd:"" help:"Show the details of your account."`
     Allocation allocation.Options `cmd:"" help:"Manage allocations."`
     AllocationEntitlements allocationentitlements.Options `cmd:"" help:"Manage allocation entitlements."`
+    BusinessHours businesshours.Options `cmd:"" help:"Show the business hours based on specified timezone."`
     CloudAccess  cloudaccess.Options `cmd:"" help:"Manage cloud access."`
     CloudAccessAccounts  cloudaccessaccounts.Options `cmd:"" help:"Manage cloud access accounts."`
     Errata errata.Options `cmd:"" help:"Manage errata."`
